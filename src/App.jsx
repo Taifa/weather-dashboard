@@ -28,7 +28,7 @@ function App() {
     }
   }
   return (
-    <main>
+    <main className="flex justify-center items-center h-screen flex-col gap-8">
       <SearchBar fetchWeather={fetchWeather} />
       {weather && <WeatherCard weather={weather} />}
     </main>
