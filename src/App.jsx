@@ -13,6 +13,10 @@ function App() {
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const savedData = JSON.parse(localStorage.getItem("saved"));
+  const [recentSearches, setRecentSearches] = useState(
+    savedData ? savedData : [],
+  );
 
   /* Creating an async function that dictates something
     inside the function will have the await keyword
@@ -50,6 +54,17 @@ function App() {
 
       // Setting weather state
       setWeather(weatherData);
+      if (
+        !recentSearches.some(
+          (item) => item.toLowerCase() === city.toLowerCase(),
+        )
+      ) {
+        const updatedArray = [...recentSearches, city];
+        setRecentSearches(updatedArray.slice(-5));
+        const stringySearches = JSON.stringify(updatedArray);
+        localStorage.setItem("saved", stringySearches);
+      }
+      console.log(recentSearches);
       setForecast(filteredForecast);
       console.log(weatherData);
       console.log(filteredForecast);
@@ -69,7 +84,7 @@ function App() {
     WeatherCard component only if the weather state isn't null
     */
     <main className="flex justify-center items-center h-screen flex-col gap-8">
-      <SearchBar fetchWeather={fetchWeather} />
+      <SearchBar fetchWeather={fetchWeather} recentSearches={recentSearches} />
       {error && (
         <h1 className="text-red-700">The city you have entered is invalid</h1>
       )}
